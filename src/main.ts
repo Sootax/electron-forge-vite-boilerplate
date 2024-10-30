@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
 import { BrowserWindow, app } from 'electron';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 if (require('electron-squirrel-startup')) {
     app.quit();
 }
@@ -52,9 +53,9 @@ const createWindow = () => {
 
     mainWindow.on('close', () => {
         const windowBounds = mainWindow.getBounds();
-        const newSettings = { ...settings, bounds: windowBounds};
+        const newSettings = { ...settings, bounds: windowBounds };
         writeSettings(newSettings);
-    })
+    });
 };
 
 // This method will be called when Electron has finished
@@ -89,14 +90,18 @@ interface Settings {
         y: number;
         width: number;
         height: number;
-    }
+    };
 }
 
 // Write the settings file
 function writeSettings(settings: Settings) {
     try {
         const data = JSON.stringify(settings, null, 2);
-        fs.writeFileSync(app.getPath('userData') + '/settings.json', data, 'utf8');
+        fs.writeFileSync(
+            app.getPath('userData') + '/settings.json',
+            data,
+            'utf8',
+        );
         console.log('Settings saved successfully.');
     } catch (err) {
         console.error('Failed to save settings:', err);
@@ -106,7 +111,10 @@ function writeSettings(settings: Settings) {
 // Read the settings file
 function readSettings() {
     try {
-        const data = fs.readFileSync(app.getPath('userData') + '/settings.json', 'utf8');
+        const data = fs.readFileSync(
+            app.getPath('userData') + '/settings.json',
+            'utf8',
+        );
         return JSON.parse(data);
     } catch (err) {
         console.error('Failed to read settings:', err);
